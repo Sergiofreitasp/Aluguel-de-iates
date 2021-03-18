@@ -14,7 +14,7 @@ function savechanges(){
     obj.idade = $("#idade").val();
     obj.endereco = $("#endereco").val();
     obj.numero = $("#numero").val();
-    obj.condominio = $("#condominio_drop").val();
+    obj.condominio_id = $('#condominio_drop').val();
 
     if(obj.nome == ""){
         alert("por favor, digite um nome");
@@ -71,8 +71,9 @@ function edit(){
 var global_ar="";
 
 function loadchanges(){
-    
-    $.post('../api_cadastrousuario/return.php', {}, function(data){
+    var obj = {};
+    obj.condominio_id = $('#condominio_drop').val();
+    $.post('../api_cadastrousuario/return.php', obj, function(data){
         
         global_ar= data;
         montartbl(data);
@@ -81,7 +82,7 @@ function loadchanges(){
 }
 
 function editpopup(id){
-
+  console.log(global_ar);
   $.each(global_ar, function(index, value){
     if(value.id == id){
       $('#id').val(value.id);
@@ -90,6 +91,7 @@ function editpopup(id){
       $('#idade').val(value.idade);
       $('#endereco').val(value.endereco);
       $('#numero').val(value.numero);
+      
     }
   });
   
@@ -199,16 +201,17 @@ function montartbl(data){
 
 
 function montarDropdown(data){
-  var d = "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">Selecione ..."+
+  /*var d = "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">Selecione ..."+
   "<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\">";
-  console.log("4");
+  */
+
+  var d = "<option>Selecione um condominio</option>"
   $.each(data, function(index, value){
     console.log(value.nome);
-    d+="<li><a href=\"#\">"+value.nome+"</a></li>";
+    d+="<option value="+value.id+">"+value.nome+"</option>";
   });
-  console.log("5");
+  console.log(d);
   $('#condominio_drop').html(d);
-  console.log("6"); 
 }
 
 function savechangesc(){
@@ -263,13 +266,13 @@ function editc(){
     l.each(function(){
       var s = this.id;
       s=s.split("-");
-      editpopup(s[1]);
+      editpopupc(s[1]);
     });
   }
 
 }
 
-function editpopup(id){
+function editpopupc(id){
   
   $.each(datadrop, function(index, value){
     if(value.id == id){
